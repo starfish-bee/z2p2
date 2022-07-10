@@ -2,7 +2,7 @@ mod common;
 
 #[tokio::test]
 async fn health_check_returns_200() {
-    let addr = common::spawn_app().await.expect("failed to spawn app");
+    let (addr, _) = common::spawn_app().await.expect("failed to spawn app");
     let client = reqwest::Client::new();
 
     let response = client

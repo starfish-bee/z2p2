@@ -2,7 +2,7 @@ mod common;
 
 #[tokio::test]
 async fn subscribe_returns_200_for_valid_form_data() {
-    let addr = common::spawn_app().await.expect("failed to spawn app");
+    let (addr, db_pool) = common::spawn_app().await.expect("failed to spawn app");
     let client = reqwest::Client::new();
 
     let response = client
@@ -14,11 +14,18 @@ async fn subscribe_returns_200_for_valid_form_data() {
         .expect("Failed to execute request.");
 
     assert_eq!(200, response.status().as_u16());
+
+    let saved = sqlx::query!("SELECT email, name FROM subscriptions",)
+        .fetch_one(&db_pool)
+        .await
+        .expect("Failed to fetch saved subscription.");
+    assert_eq!(saved.email, "ursula_le_guin@gmail.com");
+    assert_eq!(saved.name, "le guin");
 }
 
 #[tokio::test]
 async fn subscribe_returns_422_for_invalid_form_data() {
-    let addr = common::spawn_app().await.expect("failed to spawn app");
+    let (addr, _) = common::spawn_app().await.expect("failed to spawn app");
     let client = reqwest::Client::new();
 
     let test_cases = vec![
