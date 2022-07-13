@@ -12,6 +12,10 @@ config = "0.13.1"
 serde = { version = "1.0.138", features = ["derive"] }
 tokio = { version = "1.19.2", features = ["rt-multi-thread", "macros"] }
 uuid = { version = "1.1.2", features = ["v4"] }
+tracing = "0.1.35"
+tower = "0.4.13"
+tower-http = { version = "0.3.4", features = ["trace"] }
+tracing-subscriber = { version = "0.3.14", features = ["std", "fmt"] }
 
 [dependencies.sqlx]
 version = "0.6.0"

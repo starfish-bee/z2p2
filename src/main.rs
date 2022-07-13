@@ -5,6 +5,7 @@ use zero2prod2::{config::get_configuration, run, AppContext};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    tracing_subscriber::fmt::init();
     let config = get_configuration()?;
     let app_address = format!("localhost:{}", config.application_port);
 

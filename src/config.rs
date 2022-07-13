@@ -1,5 +1,6 @@
 use config::{Config, ConfigError, File};
 use serde::Deserialize;
+use tracing::{info, instrument};
 
 #[derive(Deserialize)]
 pub struct Settings {
@@ -32,9 +33,17 @@ impl DatabaseSettings {
     }
 }
 
+#[instrument(level = "info")]
 pub fn get_configuration() -> Result<Settings, ConfigError> {
+    info!("getting config");
     let settings = Config::builder()
         .add_source(File::with_name("config"))
         .build()?;
-    settings.try_deserialize()
+    match settings.try_deserialize() {
+        Ok(x) => {
+            info!("read config successfully");
+            Ok(x)
+        }
+        x => x,
+    }
 }
