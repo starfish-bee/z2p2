@@ -1,5 +1,6 @@
 use std::{error::Error, net::TcpListener};
 
+use secrecy::ExposeSecret;
 use sqlx::PgPool;
 use zero2prod2::{config::get_configuration, run, AppContext};
 
@@ -10,6 +11,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let app_address = format!("localhost:{}", config.application_port);
 
     let listener = TcpListener::bind(app_address)?;
-    let db_pool = PgPool::connect(&config.database.connection_string()).await?;
+    let db_pool = PgPool::connect(config.database.connection_string().expose_secret()).await?;
     run(AppContext { listener, db_pool }).await
 }
