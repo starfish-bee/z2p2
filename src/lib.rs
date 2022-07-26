@@ -8,7 +8,8 @@ use tower::ServiceBuilder;
 
 pub mod config;
 mod routes;
-mod trace;
+mod services;
+pub mod tracing;
 
 pub struct AppContext {
     pub listener: TcpListener,
@@ -21,7 +22,7 @@ pub async fn run(context: AppContext) -> Result<(), Box<dyn Error>> {
         .route("/subscribe", post(routes::subscribe))
         .layer(
             ServiceBuilder::new()
-                .layer(trace::TraceLayer)
+                .layer(services::TraceLayer)
                 .layer(Extension(context.db_pool)),
         );
 
