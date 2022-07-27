@@ -7,6 +7,7 @@ use std::{error::Error, net::TcpListener};
 use tower::ServiceBuilder;
 
 pub mod config;
+mod domain;
 mod routes;
 mod services;
 pub mod tracing;
